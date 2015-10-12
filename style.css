@@ -1,3 +1,22 @@
+p {
+  display:inline;
+  font-size: 40px;
+}
+
+input{
+  width:130px;
+  border:0px;
+  font-size:40px;
+}
+
+*.unselectable {
+   -moz-user-select: none;
+   -khtml-user-select: none;
+   -webkit-user-select: none;
+   -ms-user-select: none;
+   user-select: none;
+}
+
 .game div {
   width:100px;
   height:100px;
@@ -15,13 +34,5 @@
 .game .winner {
   background:red;
 }
-p{
-	font-size: 40px;
-}
-*.unselectable {
-   -moz-user-select: none;
-   -khtml-user-select: none;
-   -webkit-user-select: none;
-   -ms-user-select: none;
-   user-select: none;
-}
+
+

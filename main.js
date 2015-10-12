@@ -1,39 +1,85 @@
-var sqr=document.querySelectorAll('.game div');
-var inp=document.querySelector('input');
-var windv=document.querySelector('.winner');
-var first_click=true; //check if this is the first time click
+// winner div class
+var WINNER = "winner";
 
+var SECONDS = 1000;
+var TIMEOUT = 1 * SECONDS;
 
+// cached DOM elements
+var el = {
+  sqr: document.querySelectorAll('.game div'),
+  score: document.querySelector('.score input')
+};
 
-function checking(ev) {
-  var tmp=ev.target;
-  if (tmp.className===""){
-  	inp.value=Number((inp.value)-5);
-  }else{
-  	inp.value=Number(inp.value)+5;
+/*
+* Sets up click event handlers on the divs
+*/
+function setupEvents() {
+  for(var i=0;i<el.sqr.length;i++){
+    el.sqr[i].addEventListener('click',checking);
   }
+}
+
+
+/** 
+ * Check if the item that generated the event
+ * is a winning item and modify score accordingly.
+ */
+function checking(ev) {
+
+  if ( isWinner(ev.target) ) {
+    addScore(5);
+  }else{
+    addScore(-5);
+  }
+  
   shuffle();
-  if (first_click){
-  first_click=false;
-  delay();
+  restartTimer();
  }
 
-}
+
+/*
+ * Randomize a new winner
+ */
 function shuffle(){
-	windv=document.querySelector('.winner');
-	windv.classList.remove("winner");
-	sqr= _.shuffle(sqr);
-	sqr[0].classList.add("winner");
+  var currentWinner = document.querySelector('.winner');
+  var nextWinner = _.sample(el.sqr);
+
+  currentWinner.classList.remove(WINNER);
+  nextWinner.classList.add(WINNER);
 }
-function delay(){
+
+/*
+ * Starts a new timer that will reduce score by 2
+ */
+var _timer_id;
+function restartTimer(){
+  clearTimeout(_timer_id);
+  
+  _timer_id = setTimeout(function() {
 	shuffle();
-	inp.value-=2;
-	setTimeout(delay,1000);
+    addScore(-2);
+    restartTimer();
+  }, TIMEOUT);
+  
 }
 
+/**
+ * Check if el is a winner item
+ */
+function isWinner(div) {
+  return div.classList.contains(WINNER);
+}
 
-for(var i=0;i<sqr.length;i++){
-	sqr[i].addEventListener('click',checking);
+/*
+* Modify score value on the page by adding delta
+* to current value
+*/
+function addScore(delta) {
+  var newValue = Number(el.score.value) + delta;
+  el.score.value = newValue;
 	}
 
 	
+
+setupEvents();
+
